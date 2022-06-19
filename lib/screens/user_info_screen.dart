@@ -24,7 +24,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             setState(() {
               isLoading = false;
             });
-            Navigator.pushNamed(context, RouteGenerator.INFO_SCREEN);
           }
 
           if (state is UserLoading) {
@@ -76,6 +75,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
+                        Navigator.pushNamed(
+                            context, RouteGenerator.VALIDATE_PHONE_SCREEN);
                         context.read<UserBloc>().add(UserLogoutEvent());
                       },
                       icon: const Icon(

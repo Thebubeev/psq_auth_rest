@@ -64,9 +64,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final currentUser = await getUserFromCache();
       emit(UserLoading());
       if (currentUser != null) {
-        emit(UserLogoutState());
         SharedPreferences preferences = await SharedPreferences.getInstance();
         await preferences.clear();
+        emit(UserLogoutState());
       } else {
         emit(UserErrorState("Не удалось выйти."));
       }
