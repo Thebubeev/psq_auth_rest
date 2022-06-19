@@ -1,11 +1,11 @@
-class UserEntity {
+class UserInfoEntity {
   bool result;
-  UserDataEntity data;
+  UserInfoDataEntity data;
   List<dynamic> error;
 
-  UserEntity({this.result, this.data, this.error});
+  UserInfoEntity({this.result, this.data, this.error});
 
-  factory UserEntity.fromJson(Map<String, dynamic> data) {
+  factory UserInfoEntity.fromJson(Map<String, dynamic> data) {
     List<String> errors = [];
 
     if (data.containsKey('error')) {
@@ -17,28 +17,30 @@ class UserEntity {
       });
     }
 
-    return UserEntity(
+    return UserInfoEntity(
         result: data['result'],
-        data: UserDataEntity.fromJson(data['data']),
+        data: UserInfoDataEntity.fromJson(data['data']),
         error: errors);
   }
+
+  Map<String, dynamic> toJson() => {
+        'result': result,
+        'data': data.toJson(),
+        'error': error.first.toString()
+      };
 }
 
-class UserDataEntity {
+class UserInfoDataEntity {
   final String phone;
   final String name;
   final int code;
 
-  UserDataEntity({this.phone, this.name, this.code});
+  UserInfoDataEntity({this.phone, this.name, this.code});
 
-  factory UserDataEntity.fromJson(Map<String, dynamic> json) {
-    return UserDataEntity(
+  factory UserInfoDataEntity.fromJson(Map<String, dynamic> json) {
+    return UserInfoDataEntity(
         phone: json['phone'], name: json['name'], code: json['code']);
   }
 
-  Map<String, dynamic> toJson() =>{
-    'phone':phone, 
-    'name': name,
-    'code': code.toString()
-  };
+  Map<String, dynamic> toJson() => {'phone': phone, 'name': name, 'code': code};
 }

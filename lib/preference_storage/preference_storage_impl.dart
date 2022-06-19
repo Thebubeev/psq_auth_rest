@@ -9,11 +9,11 @@ mixin _Constants {
   static const String user = 'user';
 }
 
-class PreferenceStorageImpl implements PreferenceStorage{
+class PreferenceStorageImpl implements PreferenceStorage {
   final _prefs = SharedPreferences.getInstance();
 
   @override
-  Future<UserDataEntity> getUser() async {
+  Future<UserInfoDataEntity> getUser() async {
     final sharedPrefs = await _prefs;
     final jsonString = sharedPrefs.getString(_Constants.user);
     if (isBlank(jsonString)) {
@@ -21,7 +21,7 @@ class PreferenceStorageImpl implements PreferenceStorage{
     } else {
       try {
         final json = jsonDecode(jsonString);
-        return UserDataEntity.fromJson(json);
+        return UserInfoDataEntity.fromJson(json);
       } catch (e) {
         return null;
       }
@@ -29,7 +29,7 @@ class PreferenceStorageImpl implements PreferenceStorage{
   }
 
   @override
-  Future setUser(UserDataEntity user) async {
+  Future setUser(UserInfoDataEntity user) async {
     if (user != null) {
       final jsonString = user.toJson();
       await _prefs.then(
@@ -38,5 +38,4 @@ class PreferenceStorageImpl implements PreferenceStorage{
       await _prefs.then((value) => value.remove(_Constants.user));
     }
   }
-
 }

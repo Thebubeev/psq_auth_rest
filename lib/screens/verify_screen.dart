@@ -5,27 +5,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:psq/bloc/bloc/user_bloc.dart';
 import 'package:psq/entities/sms_entity.dart';
-import 'package:psq/screens/name_screen.dart';
+import 'package:psq/helpers/number_converter.dart';
+import 'package:psq/helpers/router.dart';
+import 'package:psq/screens/register_screen.dart';
 import 'package:psq/widgets/button_input_widget.dart';
 import 'package:psq/widgets/loader_widget.dart';
 
 import '../helpers/custom_input_formatter.dart';
 
-class ConfirmScreen extends StatefulWidget {
+class VerifyScreen extends StatefulWidget {
   final String phone;
   final SmsEntity smsEntity;
-  const ConfirmScreen({Key key, this.phone, this.smsEntity}) : super(key: key);
+  const VerifyScreen(this.phone, this.smsEntity);
 
   @override
-  State<ConfirmScreen> createState() => _ConfirmScreenState();
+  State<VerifyScreen> createState() => _VerifyScreenState();
 }
 
-class _ConfirmScreenState extends State<ConfirmScreen> {
+class _VerifyScreenState extends State<VerifyScreen> {
   TextEditingController smsController = TextEditingController();
+  String error;
+
   int secondsRemaining = 60;
   bool enableSwitchButton;
   Timer timer;
+
   bool isLoading = false;
+
   final key = GlobalKey<FormState>();
 
   @override
@@ -64,18 +70,24 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       resizeToAvoidBottomInset: true,
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
-          if (state is UserConfirmStateState) {
+          if (state is UserVerifyState) {
             setState(() {
               isLoading = false;
             });
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => AuthScreen(
-                          phone: widget.phone,
-                          smsEntity: widget.smsEntity,
-                        )));
+
+            Navigator.pushNamed(context, RouteGenerator.REGISTER_SCREEN,
+                arguments: {
+                  'phone': widget.phone,
+                  'code': int.parse(smsController.text.replaceAll(' ', ''))
+                });
           }
+
+          if (state is UserLoading) {
+            setState(() {
+              isLoading = true;
+            });
+          }
+
           if (state is UserErrorState) {
             setState(() {
               isLoading = false;
@@ -126,16 +138,9 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                               border: InputBorder.none,
                             ),
                             onSaved: (val) {
-                              if (key.currentState.validate()) {
-                                key.currentState.save();
-                                setState(() {
-                                  smsController.text = val;
-                                });
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const AuthScreen()));
-                              }
+                              setState(() {
+                                smsController.text = val;
+                              });
                             },
                             validator: (String value) {
                               if (value.isEmpty) {
@@ -208,14 +213,11 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                         ),
                         ButtonInputWidget(
                           function: () {
-                            setState(() {
-                              isLoading = true;
-                            });
                             final sms = int.parse(
                                 smsController.text.replaceAll(' ', ''));
                             context
                                 .read<UserBloc>()
-                                .add(UserConfirmEvent(123456, '9991234567'));
+                                .add(UserVerifyEvent(123456, '9991234567'));
                           },
                           text: 'Выполнить',
                         )

@@ -1,7 +1,7 @@
 import 'package:psq/entities/user_entity.dart';
 
 abstract class PreferenceStorage {
-  Future<UserDataEntity> getUser();
+  Future<UserInfoDataEntity> getUser();
 
-  Future setUser(UserDataEntity user);
+  Future setUser(UserInfoDataEntity user);
 }

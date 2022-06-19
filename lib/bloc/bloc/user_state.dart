@@ -4,25 +4,31 @@ abstract class UserState {}
 
 class UserInitial extends UserState {}
 
+class UserData extends UserState {
+  final UserInfoDataEntity userInfoDataEntity;
+  UserData({this.userInfoDataEntity});
+}
+
 class UserLoading extends UserState {}
 
-class UserLoginStateState extends UserState {
-  final SmsEntity smsEntity;
-  final String phone;
+class UserLogoutState extends UserState {}
 
-  UserLoginStateState(this.smsEntity, this.phone);
+class UserValidatePhoneState extends UserState {
+  final SmsEntity smsEntity;
+
+  UserValidatePhoneState(this.smsEntity);
 }
 
-class UserConfirmStateState extends UserState {
+class UserVerifyState extends UserState {
   final VerifySmsEntity verifySmsEntity;
 
-  UserConfirmStateState(this.verifySmsEntity);
+  UserVerifyState(this.verifySmsEntity);
 }
 
-class UserRegisterStateState extends UserState {
-  final UserEntity userEntity;
+class UserRegisterState extends UserState {
+  final UserInfoDataEntity userEntity;
 
-  UserRegisterStateState(this.userEntity);
+  UserRegisterState(this.userEntity);
 }
 
 class UserErrorState extends UserState {

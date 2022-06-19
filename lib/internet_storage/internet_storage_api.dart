@@ -51,7 +51,7 @@ class InternetStorageApi {
     return null;
   }
 
-  Future<UserEntity> register(String phone, String name, int code) async {
+  Future<UserInfoEntity> register(String phone, String name, int code) async {
     final response = await http.post(
       Uri.parse("${BASE_URL}register"),
       headers: <String, String>{
@@ -64,7 +64,7 @@ class InternetStorageApi {
     );
 
     if (response.statusCode == 200) {
-      return UserEntity.fromJson(jsonDecode(response.body));
+      return UserInfoEntity.fromJson(jsonDecode(response.body));
     }
 
     return null;
