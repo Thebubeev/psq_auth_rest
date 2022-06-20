@@ -33,7 +33,7 @@ class InternetStorageApi {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-        <String, dynamic>{'phone': phone, 'code': code},
+        <String, dynamic>{'phone': '9991234567', 'code': 123456},
       ),
     );
     return VerifySmsEntity.fromJson(jsonDecode(response.body));
@@ -47,7 +47,7 @@ class InternetStorageApi {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-        <String, Object>{'phone': phone, 'name': name, 'code': code},
+        <String, Object>{'phone': phone, 'name': name, 'code': 123456},
       ),
     );
 
