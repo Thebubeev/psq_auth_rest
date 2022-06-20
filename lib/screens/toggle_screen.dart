@@ -12,7 +12,7 @@ class ToggleWidget extends StatefulWidget {
 }
 
 class _ToggleWidgetState extends State<ToggleWidget> {
-  final PreferenceStorage prefs = PreferenceStorageImpl();
+  final prefs = PreferenceStorageImpl();
   @override
   void initState() {
     prefs.getUser().then((user) {

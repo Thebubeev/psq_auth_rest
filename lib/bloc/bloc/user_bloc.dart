@@ -26,37 +26,37 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<UserValidatePhoneEvent>((event, emit) async {
       emit(UserLoading());
-      var value = await internetStorageApi.validatePhone(event.phone);
-      if (value != null) {
+      final value = await internetStorageApi.validatePhone(event.phone);
+      if (value.result == true) {
         smsEntity = value;
         emit(UserValidatePhoneState(smsEntity));
       } else {
-        emit(UserErrorState("Ошибка подтверждения номера val."));
+        emit(UserValidateErrorState(value.error.text));
       }
     });
 
     on<UserVerifyEvent>((event, emit) async {
       emit(UserLoading());
-      var value = await internetStorageApi.verify(event.phone, event.code);
-      if (value != null) {
+      final value = await internetStorageApi.verify(event.phone, event.code);
+      if (value.result == true) {
         verifySmsEntity = value;
         emit(UserVerifyState(verifySmsEntity));
       } else {
-        emit(UserErrorState("Ошибка подтверждения номера ver."));
+        emit(UserVerifyErrorState(value.error.text));
       }
     });
 
     on<UserRegisterEvent>((event, emit) async {
       emit(UserLoading());
-      var value = await internetStorageApi.register(
+      final value = await internetStorageApi.register(
           event.phone, event.name, event.code);
-      if (value != null) {
+      if (value.result == true) {
         userEntity = value;
         final userInfoDataEntity = userEntity.data;
         emit(UserRegisterState(userInfoDataEntity));
         preferenceStorage.setUser(userInfoDataEntity);
       } else {
-        emit(UserErrorState("Ошибка подтверждения номера reg."));
+        emit(UserRegisterErrorState(value.error.text));
       }
     });
 

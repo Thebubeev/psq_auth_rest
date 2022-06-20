@@ -1,33 +1,19 @@
 class UserInfoEntity {
   bool result;
   UserInfoDataEntity data;
-  List<dynamic> error;
+  UserErrorDataEntity error;
 
   UserInfoEntity({this.result, this.data, this.error});
 
   factory UserInfoEntity.fromJson(Map<String, dynamic> data) {
-    List<String> errors = [];
-
-    if (data.containsKey('error')) {
-      Map<String, Object> errs = data['error'];
-
-      errs.forEach((key, value) {
-        List<String> list = List<String>.from(value);
-        errors.addAll(list);
-      });
-    }
-
     return UserInfoEntity(
         result: data['result'],
         data: UserInfoDataEntity.fromJson(data['data']),
-        error: errors);
+        error: UserErrorDataEntity.fromJson(data['error']));
   }
 
-  Map<String, dynamic> toJson() => {
-        'result': result,
-        'data': data.toJson(),
-        'error': error.first.toString()
-      };
+  Map<String, dynamic> toJson() =>
+      {'result': result, 'data': data.toJson(), 'error': error.toJson()};
 }
 
 class UserInfoDataEntity {
@@ -43,4 +29,18 @@ class UserInfoDataEntity {
   }
 
   Map<String, dynamic> toJson() => {'phone': phone, 'name': name, 'code': code};
+}
+
+class UserErrorDataEntity {
+  final String text;
+
+  UserErrorDataEntity({this.text});
+
+  factory UserErrorDataEntity.fromJson(Map<String, dynamic> json) {
+    return UserErrorDataEntity(text: json['text']);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'error': text,
+      };
 }

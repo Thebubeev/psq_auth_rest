@@ -22,14 +22,7 @@ class InternetStorageApi {
         },
       ),
     );
-
-    if (response.statusCode == 200) {
-      return SmsEntity.fromJson(jsonDecode(response.body));
-    } else {
-      debugPrint(response.body);
-    }
-
-    return null;
+    return SmsEntity.fromJson(jsonDecode(response.body));
   }
 
   Future<VerifySmsEntity> verify(String phone, int code) async {
@@ -43,12 +36,7 @@ class InternetStorageApi {
         <String, dynamic>{'phone': phone, 'code': code},
       ),
     );
-
-    if (response.statusCode == 200) {
-      return VerifySmsEntity.fromJson(jsonDecode(response.body));
-    }
-
-    return null;
+    return VerifySmsEntity.fromJson(jsonDecode(response.body));
   }
 
   Future<UserInfoEntity> register(String phone, String name, int code) async {
@@ -63,10 +51,6 @@ class InternetStorageApi {
       ),
     );
 
-    if (response.statusCode == 200) {
-      return UserInfoEntity.fromJson(jsonDecode(response.body));
-    }
-
-    return null;
+    return UserInfoEntity.fromJson(jsonDecode(response.body));
   }
 }

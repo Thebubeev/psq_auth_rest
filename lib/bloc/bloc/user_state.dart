@@ -11,8 +11,6 @@ class UserData extends UserState {
 
 class UserLoading extends UserState {}
 
-class UserLogoutState extends UserState {}
-
 class UserValidatePhoneState extends UserState {
   final SmsEntity smsEntity;
 
@@ -31,8 +29,27 @@ class UserRegisterState extends UserState {
   UserRegisterState(this.userEntity);
 }
 
+class UserLogoutState extends UserState {}
+
 class UserErrorState extends UserState {
   final String error;
-
   UserErrorState(this.error);
+}
+
+class UserValidateErrorState extends UserState {
+  final String error;
+
+  UserValidateErrorState(this.error);
+}
+
+class UserVerifyErrorState extends UserState {
+  final String error;
+
+  UserVerifyErrorState(this.error);
+}
+
+class UserRegisterErrorState extends UserState {
+  final String error;
+
+  UserRegisterErrorState(this.error);
 }

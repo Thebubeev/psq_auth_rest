@@ -7,7 +7,6 @@ import 'package:psq/bloc/bloc/user_bloc.dart';
 import 'package:psq/entities/sms_entity.dart';
 import 'package:psq/helpers/number_converter.dart';
 import 'package:psq/helpers/router.dart';
-import 'package:psq/screens/register_screen.dart';
 import 'package:psq/widgets/button_input_widget.dart';
 import 'package:psq/widgets/loader_widget.dart';
 
@@ -23,8 +22,7 @@ class VerifyScreen extends StatefulWidget {
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
-  TextEditingController smsController = TextEditingController();
-  String error;
+  TextEditingController codeController = TextEditingController();
 
   int secondsRemaining = 60;
   bool enableSwitchButton;
@@ -32,7 +30,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   bool isLoading = false;
 
-  final key = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -67,7 +65,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserVerifyState) {
@@ -78,7 +75,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             Navigator.pushNamed(context, RouteGenerator.REGISTER_SCREEN,
                 arguments: {
                   'phone': widget.phone,
-                  'code': int.parse(smsController.text.replaceAll(' ', ''))
+                  'code': int.parse(codeController.text.replaceAll(' ', ''))
                 });
           }
 
@@ -88,7 +85,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             });
           }
 
-          if (state is UserErrorState) {
+          if (state is UserVerifyErrorState) {
             setState(() {
               isLoading = false;
             });
@@ -102,12 +99,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
             ? const LoaderWidget()
             : SafeArea(
                 child: Form(
-                  key: key,
+                  key: _formKey,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(bottom: 40),
+                          padding: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'Код из СМС',
                             style: TextStyle(
@@ -119,32 +116,31 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 110, vertical: 20),
+                              horizontal: 130, vertical: 10),
                           child: TextFormField(
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 36, color: Colors.black),
                             keyboardType: TextInputType.phone,
-                            controller: smsController,
+                            controller: codeController,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(6),
                               CustomInputFormatter()
                             ],
                             decoration: const InputDecoration(
-                              prefixStyle:
-                                  TextStyle(color: Colors.black, fontSize: 36),
+                              errorStyle: TextStyle(fontSize: 16),
                               hintText: '000 000',
                               border: InputBorder.none,
                             ),
                             onSaved: (val) {
                               setState(() {
-                                smsController.text = val;
+                                codeController.text = val;
                               });
                             },
                             validator: (String value) {
                               if (value.isEmpty) {
-                                return 'Номер телефона не может быть пустым';
+                                return 'Введите код';
                               }
                               return null;
                             },
@@ -154,7 +150,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                           height: 10,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 40),
+                          padding: const EdgeInsets.only(top: 30),
                           child: Text(
                             'Отправили на ${widget.phone}',
                             style: const TextStyle(fontSize: 14),
@@ -213,11 +209,15 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         ),
                         ButtonInputWidget(
                           function: () {
-                            final sms = int.parse(
-                                smsController.text.replaceAll(' ', ''));
-                            context
-                                .read<UserBloc>()
-                                .add(UserVerifyEvent(123456, '9991234567'));
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              final code = int.parse(
+                                  codeController.text.replaceAll(' ', ''));
+                              final phone = numberConverter(widget.phone);
+                              context
+                                  .read<UserBloc>()
+                                  .add(UserVerifyEvent(code, phone));
+                            }
                           },
                           text: 'Выполнить',
                         )
