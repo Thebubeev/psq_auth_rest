@@ -1,7 +1,7 @@
 class UserInfoEntity {
   bool result;
   UserInfoDataEntity data;
-  UserErrorDataEntity error;
+  UserInfoErrorDataEntity error;
 
   UserInfoEntity({this.result, this.data, this.error});
 
@@ -9,7 +9,7 @@ class UserInfoEntity {
     return UserInfoEntity(
         result: data['result'],
         data: UserInfoDataEntity.fromJson(data['data']),
-        error: UserErrorDataEntity.fromJson(data['error']));
+        error: UserInfoErrorDataEntity.fromJson(data['error']));
   }
 
   Map<String, dynamic> toJson() =>
@@ -31,13 +31,13 @@ class UserInfoDataEntity {
   Map<String, dynamic> toJson() => {'phone': phone, 'name': name, 'code': code};
 }
 
-class UserErrorDataEntity {
+class UserInfoErrorDataEntity {
   final String text;
 
-  UserErrorDataEntity({this.text});
+  UserInfoErrorDataEntity({this.text});
 
-  factory UserErrorDataEntity.fromJson(Map<String, dynamic> json) {
-    return UserErrorDataEntity(text: json['text']);
+  factory UserInfoErrorDataEntity.fromJson(Map<String, dynamic> json) {
+    return UserInfoErrorDataEntity(text: json['text']);
   }
 
   Map<String, dynamic> toJson() => {

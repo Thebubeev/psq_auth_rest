@@ -12,16 +12,16 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final internetStorageApi = InternetStorageApi();
   final preferenceStorage = PreferenceStorageImpl();
+  
   SmsEntity smsEntity;
   VerifySmsEntity verifySmsEntity;
-
   UserInfoEntity userEntity;
   UserInfoDataEntity userInfoDataEntity;
 
   UserBloc() : super(UserInitial()) {
     on<UserInitEvent>((event, emit) async {
       final currentUser = await getUserFromCache();
-      emit(UserData(userInfoDataEntity: currentUser));
+      emit(UserInitial(userInfoDataEntity: currentUser));
     });
 
     on<UserValidatePhoneEvent>((event, emit) async {
@@ -68,7 +68,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         await preferences.clear();
         emit(UserLogoutState());
       } else {
-        emit(UserErrorState("Не удалось выйти."));
+        emit(UserLogoutErrorState("Не удалось выйти."));
       }
     });
   }

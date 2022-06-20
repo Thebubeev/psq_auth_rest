@@ -32,7 +32,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             });
           }
 
-          if (state is UserErrorState) {
+          if (state is UserLogoutErrorState) {
             setState(() {
               isLoading = false;
             });

@@ -35,6 +35,16 @@ class _VerifyScreenState extends State<VerifyScreen> {
   @override
   void initState() {
     super.initState();
+    sendAgain();
+  }
+
+  @override
+  dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  sendAgain() {
     setState(() {
       enableSwitchButton = true;
     });
@@ -54,12 +64,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
         timer.cancel();
       }
     });
-  }
-
-  @override
-  dispose() {
-    timer.cancel();
-    super.dispose();
   }
 
   @override
@@ -130,7 +134,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                             ],
                             decoration: const InputDecoration(
                               errorStyle: TextStyle(fontSize: 16),
-                              hintText: '000 000',
+                              hintText: '123 456',
                               border: InputBorder.none,
                             ),
                             onSaved: (val) {
@@ -161,25 +165,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         ),
                         InkWell(
                             onTap: () {
-                              setState(() {
-                                enableSwitchButton = true;
-                              });
-                              timer = Timer.periodic(const Duration(seconds: 1),
-                                  (_) {
-                                if (secondsRemaining != 0) {
-                                  if (mounted) {
-                                    setState(() {
-                                      secondsRemaining--;
-                                    });
-                                  }
-                                } else {
-                                  setState(() {
-                                    secondsRemaining = 60;
-                                    enableSwitchButton = false;
-                                  });
-                                  timer.cancel();
-                                }
-                              });
+                              sendAgain();
                             },
                             child: Container(
                               decoration: BoxDecoration(

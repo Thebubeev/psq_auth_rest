@@ -2,11 +2,9 @@ part of 'user_bloc.dart';
 
 abstract class UserState {}
 
-class UserInitial extends UserState {}
-
-class UserData extends UserState {
+class UserInitial extends UserState {
   final UserInfoDataEntity userInfoDataEntity;
-  UserData({this.userInfoDataEntity});
+  UserInitial({this.userInfoDataEntity});
 }
 
 class UserLoading extends UserState {}
@@ -31,9 +29,9 @@ class UserRegisterState extends UserState {
 
 class UserLogoutState extends UserState {}
 
-class UserErrorState extends UserState {
+class UserLogoutErrorState extends UserState {
   final String error;
-  UserErrorState(this.error);
+  UserLogoutErrorState(this.error);
 }
 
 class UserValidateErrorState extends UserState {

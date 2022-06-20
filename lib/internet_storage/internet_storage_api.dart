@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:psq/entities/sms_entity.dart';
 import 'package:psq/entities/user_entity.dart';
 import 'package:http/http.dart' as http;

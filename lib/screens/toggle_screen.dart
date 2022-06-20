@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:psq/helpers/router.dart';
 import 'package:psq/preference_storage/preference_storage_impl.dart';
 
-import '../preference_storage/preference_storage.dart';
-
 class ToggleWidget extends StatefulWidget {
   const ToggleWidget({Key key}) : super(key: key);
 
